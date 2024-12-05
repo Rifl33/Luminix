@@ -2,6 +2,8 @@
 
 A powerful image enhancement application that uses TensorFlow.js and advanced AI algorithms to dramatically improve image quality.
 
+[View GitHub](https://github.com/Rifl33/Luminix)
+
 ## Features
 
 - 🖼️ Advanced Image Enhancement:
