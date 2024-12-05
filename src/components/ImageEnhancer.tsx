@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
-import { Upload, ZoomIn, ZoomOut, Sun, Contrast, Wand2 } from 'lucide-react'
+import { Upload, ZoomIn, ZoomOut, Sun, Contrast, Wand2, Download } from 'lucide-react'
 import { AIImageEnhancer } from '@/services/imageEnhancer'
 
 export default function ImageEnhancer() {
@@ -26,7 +26,8 @@ export default function ImageEnhancer() {
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
-    if (file) {
+    
+    if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
       const reader = new FileReader()
       reader.onload = (e) => {
         const result = e.target?.result
@@ -35,6 +36,8 @@ export default function ImageEnhancer() {
         }
       }
       reader.readAsDataURL(file)
+    } else {
+      alert("Please upload only JPEG or PNG images")
     }
   }
 
@@ -45,7 +48,8 @@ export default function ImageEnhancer() {
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
     const file = event.dataTransfer.files[0]
-    if (file) {
+    
+    if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
       const reader = new FileReader()
       reader.onload = (e) => {
         const result = e.target?.result
@@ -54,6 +58,8 @@ export default function ImageEnhancer() {
         }
       }
       reader.readAsDataURL(file)
+    } else {
+      alert("Please upload only JPEG or PNG images")
     }
   }
 
@@ -104,21 +110,48 @@ export default function ImageEnhancer() {
     setComparePosition(Math.min(Math.max(position, 0), 100));
   };
 
-  const handleDownload = () => {
+  const handleDownload = (format: 'png' | 'jpeg') => {
     if (!enhancedImage) return
     
-    const link = document.createElement('a')
-    link.href = enhancedImage
-    link.download = 'enhanced-image.png'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    const canvas = document.createElement('canvas')
+    const img = new Image()
+    
+    img.onload = () => {
+      canvas.width = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+      
+      ctx.drawImage(img, 0, 0)
+      
+      // Get the data URL in the specified format
+      const dataUrl = canvas.toDataURL(`image/${format}`, 0.9)
+      
+      const link = document.createElement('a')
+      link.href = dataUrl
+      link.download = `enhanced-image.${format}`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+    
+    img.src = enhancedImage
   }
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-4">
       <div className="container mx-auto max-w-3xl">
-        <h1 className="text-2xl font-bold mb-6 text-center">Image Enhancer</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-center">Image Enhancer</h1>
+          <a 
+            href="https://github.com/Rifl33/Luminix"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-gray-200 transition-colors"
+          >
+            View GitHub
+          </a>
+        </div>
         
         <div className="mb-6">
           <div 
@@ -128,7 +161,7 @@ export default function ImageEnhancer() {
           >
             <input
               type="file"
-              accept="image/*"
+              accept="image/jpeg, image/png"
               onChange={handleImageUpload}
               className="hidden"
               id="imageUpload"
@@ -223,13 +256,24 @@ export default function ImageEnhancer() {
 
         <div className="mt-6 flex justify-center space-x-4">
           {enhancedImage && (
-            <Button 
-              onClick={handleDownload} 
-              variant="outline" 
-              className="bg-gray-800 text-gray-100 hover:bg-gray-700"
-            >
-              Download Enhanced Image
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                onClick={() => handleDownload('png')} 
+                variant="outline" 
+                className="bg-gray-800 text-gray-100 hover:bg-gray-700"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download PNG
+              </Button>
+              <Button 
+                onClick={() => handleDownload('jpeg')} 
+                variant="outline" 
+                className="bg-gray-800 text-gray-100 hover:bg-gray-700"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download JPEG
+              </Button>
+            </div>
           )}
           <Button 
             onClick={handleAIEnhance} 
