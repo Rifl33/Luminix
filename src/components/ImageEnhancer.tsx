@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { Upload, ZoomIn, ZoomOut, Sun, Contrast, Wand2, Download } from 'lucide-react'
 import { AIImageEnhancer } from '@/services/imageEnhancer'
+import { Logo } from './Logo'
 
 export default function ImageEnhancer() {
   const [image, setImage] = useState<string | null>(null)
@@ -139,23 +140,23 @@ export default function ImageEnhancer() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-4">
+    <div className="min-h-screen bg-[#0B0F1A] text-gray-100 p-4">
       <div className="container mx-auto max-w-3xl">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-center">Image Enhancer</h1>
+        <div className="flex justify-between items-center mb-8">
+          <Logo className="h-8" />
           <a 
             href="https://github.com/Rifl33/Luminix"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-400 hover:text-gray-200 transition-colors"
+            className="text-[#3B82F6] hover:text-[#60A5FA] transition-colors"
           >
             View GitHub
           </a>
         </div>
         
-        <div className="mb-6">
+        <div className="mb-8">
           <div 
-            className="border border-gray-700 rounded-lg p-8 text-center cursor-pointer hover:bg-gray-800 transition-colors"
+            className="border-2 border-dashed border-[#1E293B] rounded-xl p-12 text-center cursor-pointer hover:border-[#3B82F6] hover:bg-[#111827] transition-all duration-300"
             onDragOver={handleDragOver}
             onDrop={handleDrop}
           >
@@ -167,17 +168,18 @@ export default function ImageEnhancer() {
               id="imageUpload"
             />
             <label htmlFor="imageUpload" className="cursor-pointer">
-              <Upload className="mx-auto h-8 w-8 text-gray-400" />
-              <p className="mt-2 text-sm text-gray-400">Upload image</p>
+              <Upload className="mx-auto h-12 w-12 text-[#3B82F6]" />
+              <p className="mt-4 text-base text-gray-400">Drop your image here or click to upload</p>
+              <p className="mt-2 text-sm text-gray-500">Supports PNG and JPEG</p>
             </label>
           </div>
         </div>
 
         {image && enhancedImage && (
-          <div className="space-y-6">
+          <div className="space-y-8">
             <div 
               ref={imageContainerRef}
-              className="relative h-[500px] overflow-hidden rounded-lg cursor-col-resize"
+              className="relative h-[500px] overflow-hidden rounded-xl cursor-col-resize bg-[#111827]"
               onMouseMove={handleCompareMove}
             >
               <img 
@@ -213,13 +215,13 @@ export default function ImageEnhancer() {
               </div>
             </div>
 
-            <div className="mt-6 space-y-4">
+            <div className="space-y-6">
               <div>
-                <label htmlFor="brightness" className="block text-sm font-medium mb-1">
+                <label htmlFor="brightness" className="block text-sm font-medium mb-2 text-gray-300">
                   Brightness
                 </label>
                 <div className="flex items-center gap-4">
-                  <ZoomOut className="h-4 w-4 text-gray-400" />
+                  <ZoomOut className="h-4 w-4 text-[#3B82F6]" />
                   <Slider
                     id="brightness"
                     min={0}
@@ -229,15 +231,15 @@ export default function ImageEnhancer() {
                     onValueChange={(value: number[]) => setBrightness(value[0])}
                     className="flex-grow"
                   />
-                  <ZoomIn className="h-4 w-4 text-gray-400" />
+                  <ZoomIn className="h-4 w-4 text-[#3B82F6]" />
                 </div>
               </div>
               <div>
-                <label htmlFor="contrast" className="block text-sm font-medium mb-1">
+                <label htmlFor="contrast" className="block text-sm font-medium mb-2 text-gray-300">
                   Contrast
                 </label>
                 <div className="flex items-center gap-4">
-                  <Sun className="h-4 w-4 text-gray-400" />
+                  <Sun className="h-4 w-4 text-[#3B82F6]" />
                   <Slider
                     id="contrast"
                     min={0}
@@ -247,37 +249,37 @@ export default function ImageEnhancer() {
                     onValueChange={(value) => setContrast(value[0])}
                     className="flex-grow"
                   />
-                  <Contrast className="h-4 w-4 text-gray-400" />
+                  <Contrast className="h-4 w-4 text-[#3B82F6]" />
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        <div className="mt-6 flex justify-center space-x-4">
+        <div className="mt-8 flex justify-center space-x-4">
           {enhancedImage && (
             <div className="flex gap-2">
               <Button 
                 onClick={() => handleDownload('png')} 
                 variant="outline" 
-                className="bg-gray-800 text-gray-100 hover:bg-gray-700"
+                className="bg-[#1E293B] text-gray-100 hover:bg-[#2D3748] border-[#3B82F6]"
               >
-                <Download className="w-4 h-4 mr-2" />
+                <Download className="w-4 h-4 mr-2 text-[#3B82F6]" />
                 Download PNG
               </Button>
               <Button 
                 onClick={() => handleDownload('jpeg')} 
                 variant="outline" 
-                className="bg-gray-800 text-gray-100 hover:bg-gray-700"
+                className="bg-[#1E293B] text-gray-100 hover:bg-[#2D3748] border-[#3B82F6]"
               >
-                <Download className="w-4 h-4 mr-2" />
+                <Download className="w-4 h-4 mr-2 text-[#3B82F6]" />
                 Download JPEG
               </Button>
             </div>
           )}
           <Button 
             onClick={handleAIEnhance} 
-            className="bg-blue-600 text-white hover:bg-blue-700"
+            className="bg-[#3B82F6] text-white hover:bg-[#2563EB] transition-colors"
             disabled={isEnhancing || !image}
           >
             <Wand2 className="w-4 h-4 mr-2" />
